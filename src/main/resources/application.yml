@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: books-albums-service
+
+spring.profiles.active: prod
+
+server:
+  port: 8082
+
+resilience4j:
+  thread-pool-bulkhead:
+    instances:
+      ITunes:
+        coreThreadPoolSize: 10
+        maxThreadPoolSize: 20
+        queueCapacity: 100
+      GoogleBooks:
+        coreThreadPoolSize: 10
+        maxThreadPoolSize: 20
+        queueCapacity: 100
+  timelimiter:
+    instances:
+      ITunes:
+        timeoutDuration: 30s
+        cancelRunningFuture: true
+      GoogleBooks:
+        timeoutDuration: 30s
+        cancelRunningFuture: true
+  circuitbreaker:
+    instances:
+      ITunes:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10000
+        allowHealthIndicatorToFail: true
+        registerHealthIndicator: true
+      GoogleBooks:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10000
+        allowHealthIndicatorToFail: true
+        registerHealthIndicator: true
+
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+apiCalls:
+  maxResult: 5
+
+googleBooks:
+  apiKey: 'AIzaSyB9K7kJavy_1t2rNJDIzGIdaA1RZzDFMyw'
+

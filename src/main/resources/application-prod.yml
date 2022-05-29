@@ -1,0 +1,23 @@
+server:
+  port: 8083
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+  endpoint:
+    health:
+      show-details: always
+
+apiCalls:
+  maxResult: 5
+
+
