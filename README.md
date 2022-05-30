@@ -14,7 +14,7 @@ One of the following three methods can be used to run the Google Books and ITune
 ```
 2. Jar File: You can also run the project's jar file. Pull the jar file from this Google Drive link. 
 ```
-    https://github.com/adnan5509/BooksAndAlbums
+    https://drive.google.com/drive/folders/1mQacqSRLqPRr6rRTad4xCLLpSpPdQcXb?usp=sharing
 ```
 Use the following command to run it on port 8083.
 
@@ -39,13 +39,16 @@ Please read the following information related to the project.
 
     ```http://localhost:8083/swagger-ui.html```
 * For prod profile, I have exposed the following endpoints for the actuator.
-    ```
+
       http://localhost:8083/swagger-ui.html
+
       http://localhost:8083/api-docs
+
       http://localhost:8083/actuator/health
+
       http://localhost:8083/actuator/prometheus
-    ```
 * Result limits are preconfigured to 5. It can be changed by updating the property apiCalls.maxResult.
+* Google books api required an API key for making requests. For that I have created a new Google account and generated and API key which is added to the application.yml file with property name googleBooks.apiKey
 
 ## Technologies/Mechanisms used:
 * Java 8 for development.
@@ -58,8 +61,10 @@ Please read the following information related to the project.
 * Docker for containerization.
 
 ## Improvement Suggestions:
+
 Following improvements could have been made which I wasn’t able to do due to time limitations.
+
 * Better exception handling using controller advice with appropriate response codes.
-*  Better visualization of metrics for response times by enabling a prometheus server on docker and using some metrics visualizing tool like Grafana.
-*  Using Asynchronous operations to introduce multithreading for concurrent requests.
-*  Unit tests to make repeated calls to third party services to check concurrent requests handling. 
+* Better visualization of metrics for response times by enabling a prometheus server on docker and using some metrics visualizing tool like Grafana.
+* Using Asynchronous operations to introduce multithreading for concurrent requests.
+* Unit tests to make repeated calls to third party services to check concurrent requests handling. 
