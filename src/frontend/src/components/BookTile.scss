@@ -1,0 +1,35 @@
+.BookTile {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    border: 2px solid;
+    background-color: rgb(112, 54, 54);
+    padding: 20px;
+
+    .book-info {
+        grid-column: span 2;
+
+        & h4 {
+            margin-bottom: 10px;
+            color: rgb(174, 184, 204);
+        }
+
+        text-align: left;
+        margin-left: 15px;
+    }
+
+    .book-image {
+        align-self: center;
+        justify-self: center;
+    }
+
+    .bk-img {
+        // aspect-ratio: 100 / 135 ;
+        height: 500px;
+        width: 400px;
+
+    }
+
+
+
+}

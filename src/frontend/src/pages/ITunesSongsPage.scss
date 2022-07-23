@@ -1,0 +1,16 @@
+.ITunesSongsPage {
+    .songs-header-section {
+        margin-bottom: 30px;
+        margin-top: 30px;
+        color: rgb(174, 184, 204);
+        font-size: 45px;
+    }
+
+    .song-tiles-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        grid-row-gap: 20px;
+    }
+
+}

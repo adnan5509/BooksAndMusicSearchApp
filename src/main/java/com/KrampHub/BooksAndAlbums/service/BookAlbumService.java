@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -31,5 +32,18 @@ public class BookAlbumService {
         bookAlbum.setBookList(bookList);
         return bookAlbum;
     }
+
+    public List<Book> getBooks(String searchText) {
+        logger.info("Inside Books Service getBooks Method");
+        List<Book> booksList = callingBooksService.getBooks(searchText);
+        return booksList;
+    }
+
+    public List<Album> getAlbums(String searchText) {
+        logger.info("Inside Albums Service getAlbums Method");
+        List<Album> albumList = callingAlbumsService.getAlbums(searchText);
+        return albumList;
+    }
+
 
 }

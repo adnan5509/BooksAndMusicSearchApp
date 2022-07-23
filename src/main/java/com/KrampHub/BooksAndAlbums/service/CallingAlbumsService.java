@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class CallingAlbumsService {
@@ -29,7 +32,8 @@ public class CallingAlbumsService {
 
     @CircuitBreaker(name = "ITunes", fallbackMethod = "fallbackMethodGetAlbums")
     public List<Album> getAlbums(String searchText) {
-        JsonObject itunesAlbumsResponse = iTunesAlbumsFeignClient.getAlbumsBySearchText(searchText, "musicTrack", maxResult);
+        JsonObject itunesAlbumsResponse = iTunesAlbumsFeignClient.getAlbumsBySearchText(searchText, "musicTrack",
+                maxResult);
         List<Album> albumList = parseITunesAlbumsResponse(itunesAlbumsResponse);
         albumList.sort(Comparator.comparing(album -> album.getTitle()));
         return albumList;
@@ -48,18 +52,59 @@ public class CallingAlbumsService {
         for (JsonElement jsonResultElement : jsonResultsArray) {
             String title = "";
             String artist = "";
+            String collectionName = "";
+            LocalDate releaseDate = null;
+            String country = "";
+            String genre = "";
+            String imageLink = "";
+            double trackPrice = 0.00;
+            double collectionPrice = 0.00;
+            String trackDuration = "";
+            String currency = "";
+
             JsonObject jsonResultObject = jsonResultElement.getAsJsonObject();
-            if (jsonResultObject.has("collectionName")) {
-                title = jsonResultObject.get("collectionName").getAsString();
-            } else {
-                title = "Album Title Not Available";
+
+            title = jsonResultObject.has("trackName") ? jsonResultObject.get("trackName").getAsString()
+                    : "Track Title Not Available";
+            artist = jsonResultObject.has("artistName") ? jsonResultObject.get("artistName").getAsString()
+                    : "Artist Not Available";
+            if (jsonResultObject.has("releaseDate")) {
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'",
+                        Locale.ENGLISH);
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+                LocalDate date = LocalDate.parse(jsonResultObject.get("releaseDate").getAsString(), inputFormatter);
+                String formattedDate = outputFormatter.format(date);
+                releaseDate = LocalDate.parse(formattedDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
-            if (jsonResultObject.has("artistName")) {
-                artist = jsonResultObject.get("artistName").getAsString();
+            collectionName = jsonResultObject.has("collectionName")
+                    ? jsonResultObject.get("collectionName").getAsString()
+                    : "Collection Name Not Available";
+            country = jsonResultObject.has("country") ? jsonResultObject.get("country").getAsString()
+                    : "Country Name Not Available";
+            genre = jsonResultObject.has("primaryGenreName") ? jsonResultObject.get("primaryGenreName").getAsString()
+                    : "Genre Not Available";
+            imageLink = jsonResultObject.has("artworkUrl100") ? jsonResultObject.get("artworkUrl100").getAsString()
+                    : "Image Not Available";
+
+            trackPrice = jsonResultObject.has("trackPrice") ? jsonResultObject.get("trackPrice").getAsDouble()
+                    : 0.00;
+
+            collectionPrice = jsonResultObject.has("collectionPrice") ? jsonResultObject.get("collectionPrice").getAsDouble()
+                    : 0.00;
+
+            if (jsonResultObject.has("trackTimeMillis")) {
+                long durationInMilliSecs = jsonResultObject.get("trackTimeMillis").getAsLong();
+                long minutesDuration = (durationInMilliSecs / 1000) / 60;
+                int secondsDuration = (int) ((durationInMilliSecs / 1000) % 60);
+                trackDuration = minutesDuration + " Minutes & " + secondsDuration + " seconds";
             } else {
-                artist = "Artist Not Available";
+                trackDuration = "Track Duration Not available";
             }
-            albumList.add(new Album(title, artist, "Album"));
+
+            currency = jsonResultObject.has("currency") ? jsonResultObject.get("currency").getAsString()
+                    : "Currency Not Available";
+
+            albumList.add(new Album(title, artist, "Album", collectionName, releaseDate, country, genre, imageLink, trackPrice, collectionPrice, trackDuration, currency));
         }
         return albumList;
     }

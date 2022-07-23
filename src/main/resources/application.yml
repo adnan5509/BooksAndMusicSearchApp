@@ -65,7 +65,7 @@ springdoc:
 
 
 apiCalls:
-  maxResult: 5
+  maxResult: 40
 
 googleBooks:
   apiKey: 'AIzaSyB9K7kJavy_1t2rNJDIzGIdaA1RZzDFMyw'

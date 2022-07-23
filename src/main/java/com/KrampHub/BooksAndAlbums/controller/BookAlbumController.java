@@ -1,5 +1,7 @@
 package com.KrampHub.BooksAndAlbums.controller;
 
+import com.KrampHub.BooksAndAlbums.model.Album;
+import com.KrampHub.BooksAndAlbums.model.Book;
 import com.KrampHub.BooksAndAlbums.model.BookAlbum;
 import com.KrampHub.BooksAndAlbums.service.BookAlbumService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/BooksAndAlbums")
+@CrossOrigin
 public class BookAlbumController {
 
     @Autowired
@@ -29,4 +34,29 @@ public class BookAlbumController {
     public BookAlbum getBooksAlbumsBySearchText(@PathVariable(name = "searchText") String searchText) {
         return bookAlbumService.getBooksAlbums(searchText);
     }
+
+    @Operation(summary = "Get Books", description = "Get List of Books from Google Books related to Search input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Books Returned",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404", description = "Unable to return Books",
+                    content = {@Content}),
+    })
+    @GetMapping(value = "/getBooks/{searchText}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Book> getBooksBySearchText(@PathVariable(name = "searchText") String searchText) {
+        return bookAlbumService.getBooks(searchText);
+    }
+
+    @Operation(summary = "Get Albums", description = "Get List of Albums from ITunes related to Search input")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Albums Returned",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Album.class))}),
+            @ApiResponse(responseCode = "404", description = "Unable to return Albums",
+                    content = {@Content}),
+    })
+    @GetMapping(value = "/getAlbums/{searchText}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Album> getAlbumsBySearchText(@PathVariable(name = "searchText") String searchText) {
+        return bookAlbumService.getAlbums(searchText);
+    }
+
 }

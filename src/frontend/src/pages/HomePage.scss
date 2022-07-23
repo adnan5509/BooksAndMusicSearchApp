@@ -1,0 +1,22 @@
+.HomePage {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr, 1fr, 1fr;
+    grid-row-gap: 70px;
+
+    .header-section {
+        margin-top: 20px;
+    }
+
+    .google-books-search-section {
+        // border: 1px solid;
+        // margin-top: 30px;
+        padding: 20px;
+    }
+
+    .itunes-search-section {
+        // border: 1px solid;
+        // margin-top: 30px;
+        padding: 20px;
+    }
+}
